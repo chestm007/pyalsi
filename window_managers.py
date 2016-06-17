@@ -35,6 +35,7 @@ window_manager_definitions = {
                               'jwm':                    'JWM',
                               'karmen':                 'Karmen',
                               'kwin':                   'Kwin',
+                              'kodi-standalone':        'Kodi',
                               'larswm':                 'Lars WM',
                               'lewm':                   'LEWM',
                               'lwm':                    'LWM',
