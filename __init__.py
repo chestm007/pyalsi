@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python2
 
 import os
 import math
@@ -7,37 +7,36 @@ import psutil
 import cpuinfo
 import platform
 from datetime import timedelta
+from logos import logos
+from colors import normal, bold
+from window_managers import window_manager_definitions
 
 
 @click.command()
-@click.option('-n', '--normal-colour')
-@click.option('-b', '--bold-colour')
+@click.option('-n', '--normal-colour', default="white")
+@click.option('-b', '--bold-colour', default="dgrey")
 @click.option('-a', '--archie-logo', is_flag=True)
 @click.option('-s', '--screenfetch-logo', is_flag=True)
 @click.option('-l', '--info-below', is_flag=True)
-def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
+@click.option('-d', '--distro', help="choose: " + ", ".join(logos.keys()))
+@click.option('--logo', help="type 'pyAlsi --logo help' to see valid logos for your distro", default="Archey")
+def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below, distro, logo):
+    if not distro:
+        distro = get_distro()
 
-    # default if no logo selected
-    if not archie_logo and not screenfetch_logo and not info_below:
-        archie_logo = True
+    if logo not in logos[distro]:
+        valid_logos = "Please pick either: {}".format(", ".join(logos[distro].keys()))
+        if logo != 'help':
+            valid_logos = "Invalid logo. {}".format(valid_logos)
+        raise click.UsageError(valid_logos)
 
-    if not normal_colour:
-        normal_colour = "white"
-    if not bold_colour:
-        bold_colour = "dgrey"
     colors = {"c1": normal[normal_colour],
               "c2": bold[bold_colour],
-              "low": normal["green"],
-              "med": normal["yellow"],
-              "high": normal["red"]
+              "low": bold["green"],
+              "med": bold["yellow"],
+              "high": bold["red"],
+              "red": normal["red"]
               }
-
-    if screenfetch_logo:
-        logo = logos['Screenfetch'].splitlines()
-    elif archie_logo:
-        logo = logos['Archie'].splitlines()
-    elif info_below:
-        logo = logos['Below'].splitlines()
 
     if normal_colour not in normal or bold_colour not in bold:
         # if we were passed invalid colour parameters
@@ -48,15 +47,13 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
     ram_use = math.ceil(psutil.virtual_memory().used / 1024 ** 2)
     ram_pct = math.ceil(psutil.virtual_memory().percent)
 
-    os_info = "{} {}".format(get_distro(), platform.machine())
-
-    info = [colorize("OS", os_info),
+    info = [colorize("OS", "{} {}".format(distro, platform.machine())),
             colorize("Hostname", platform.node()),
             colorize("Uptime", get_uptime()),
             colorize("Kernel", platform.release()),
             colorize("Shell", os.readlink('/proc/%d/exe' % os.getppid())),
-            colorize("Packages", len([name for name in os.listdir('/var/lib/pacman/local')])),
-            colorize("Window Manager", "cinnamon"),
+            colorize("Packages", count_packages(distro)),
+            colorize("Window Manager", get_window_manager()),
             colorize("RAM", "{} ({})".format(colorize_usage(ram_use, ram_tot, ram_pct, "M"),
                                              colorize_percent(ram_pct, "%"))),
             colorize("CPU", cpuinfo.get_cpu_info_from_proc_cpuinfo()["brand"]),
@@ -76,11 +73,11 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
                 disk.fstype, **colors))
 
     if info_below:
-        click.echo("\n".join([line.format(**colors) for line in logo]))
+        click.echo("\n".join([line.format(**colors) for line in logos[distro][logo].splitlines()]))
         click.echo("\n\n")
         click.echo("\n".join(["   " + line.format(**colors) for line in info]))
     else:
-        for i, line in enumerate(logo):
+        for i, line in enumerate((logos[distro][logo]).splitlines()):
             click.echo("{}".format(line + (info[i] if (i < len(info)) else "")).format(**colors))
     # print(logo.format(c1=color_one,c2=color_two, **info))
 
@@ -129,6 +126,15 @@ def colorize_percent(value, suffix=""):
     return level + str(value) + suffix + "{c1}"
 
 
+def count_packages(distro):
+    if distro == 'Arch Linux':
+        return len([name for name in os.listdir('/var/lib/pacman/local')])
+    elif distro == 'Ubuntu':
+        results = os.popen('dpkg -l |grep ^ii | wc -l').read().splitlines()
+        for result in results:
+            if result:
+                return result
+
 def get_uptime():
     """
     :return: uptime seconds as a human readable time
@@ -139,83 +145,26 @@ def get_uptime():
 
 
 def get_distro():
-    """
-    :return: first 2 words from /etc/issue
-    """
     with open("/etc/issue") as f:
         v = f.read().split()
-        return '{} {}'.format(v[0], v[1])
+        if v[0] == 'Arch':
+            return 'Arch Linux'
+        elif v[0] == 'Apricity':
+            return 'Apricity OS'
+        elif v[0] == 'Ubuntu':
+            return 'Ubuntu'
 
-normal = {'dgreen':  '\033[0;39m',
-          'dgrey':   '\033[0;30m',
-          'red':     '\033[0;31m',
-          'green':   '\033[0;32m',
-          'yellow':  '\033[0;33m',
-          'blue':    '\033[0;34m',
-          'magenta': '\033[0;35m',
-          'aqua':    '\033[0;36m',
-          'white':   '\033[0;37m',
-          }
 
-bold = {'dgreen':   '\033[1;39m',
-        'dgrey':    '\033[1;30m',
-        'red':      '\033[1;31m',
-        'green':    '\033[1;32m',
-        'yellow':   '\033[1;33m',
-        'blue':     '\033[1;34m',
-        'magenta':  '\033[1;35m',
-        'aqua':     '\033[1;36m',
-        'white':    '\033[1;37m',
-        }
+def get_window_manager():
+    for proc in get_processes():
+        if proc in window_manager_definitions.keys():
+            return window_manager_definitions[proc]
 
-logos = {'Archie':
-"""{c1}                  .\t\t\t
-{c1}                  #\t\t\t
-{c1}                 ###\t\t\t
-{c1}                #####\t\t\t
-{c1}                ######\t\t\t
-{c1}               ; #####;\t\t\t
-{c1}              +##.#####\t\t\t
-{c1}             +##########\t\t
-{c1}            ######{c2}#####{c1}##;\t\t
-{c1}           ###{c2}############{c1},\t\t
-{c1}          #{c2}######   #######.\t\t
-{c2}        .######;     ;###;`".\t\t
-{c2}       .#######;     ;#####.\t\t
-{c2}       #########.   .########`\t\t
-{c2}      ######'           '######\t
-{c2}     ;####                 ####;\t
-{c2}     ##'                     '##\t
-{c2}    #'                         `#\t""",
-         'Screenfetch':
-"""{c1}                   -`\t\t\t
-{c1}                  .o+`\t\t\t
-{c1}                 `ooo/\t\t\t
-{c1}                `+oooo:\t\t\t
-{c1}               `+oooooo:\t\t
-{c1}               -+oooooo+:\t\t
-{c1}             `/:-:++oooo+:\t\t
-{c1}            `/++++/+++++++:\t\t
-{c1}           `/++++++++++++++:\t\t
-{c1}          `/+++o{c2}oooooooo{c1}oooo/`\t\t
-{c1}         ./{c2}ooosssso++osssssso{c1}+`\t\t
-{c2}        .oossssso-````/ossssss+`\t
-{c2}       -osssssso.      :ssssssso.\t
-{c2}      :osssssss/        osssso+++.\t
-{c2}     /ossssssss/        +ssssooo/-`\t
-{c2}   `/ossssso+/:-        -:/+osssso+-\t
-{c2}  `+sso+:-`                 `.-/+oso:\t
-{c2} `++:.                           `-/+/\t
-{c2} .`                                 `+/\t""",
-         'Below':
-"""         {c2},{c1}                       _     _ _
-        {c2}/{c1}#{c2}\\{c1}        __ _ _ __ ___| |__ | (_)_ __  _   ___  __
-       {c2}/{c1}###{c2}\\{c1}      / _` | '__/ __| '_ \\| | | '_ \\| | | \\ \\/ /
-      {c2}/{c1}#####{c2}\\{c1}    | (_| | | | (__| | | | | | | | | |_| |)  (
-     {c2}/{c1}##,-,##{c2}\\{c1}    \\__,_|_|  \\___|_| |_|_|_|_| |_|\\__,_/_/\\_\\
-    {c2}/{c1}##(   )##{c2}\\{c1}
-   {c2}/{c1}#.--   --.#{c2}\\   A simple, elegant GNU/Linux distribution.
-  {c2}/{c1}`           `{c2}\\"""}
+
+def get_processes():
+    processes = os.popen('ps -A').read().splitlines()
+    processes = [line.split()[3] for line in processes]
+    return processes
 
 if __name__ == "__main__":
     main()
