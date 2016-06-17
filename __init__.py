@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python2
 
 import os
 import math
@@ -9,6 +9,7 @@ import platform
 from datetime import timedelta
 from logos import logos
 from colors import normal, bold
+from window_managers import window_manager_definitions
 
 
 @click.command()
@@ -58,7 +59,7 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
             colorize("Kernel", platform.release()),
             colorize("Shell", os.readlink('/proc/%d/exe' % os.getppid())),
             colorize("Packages", len([name for name in os.listdir('/var/lib/pacman/local')])),
-            colorize("Window Manager", "cinnamon"),
+            colorize("Window Manager", get_window_manager()),
             colorize("RAM", "{} ({})".format(colorize_usage(ram_use, ram_tot, ram_pct, "M"),
                                              colorize_percent(ram_pct, "%"))),
             colorize("CPU", cpuinfo.get_cpu_info_from_proc_cpuinfo()["brand"]),
@@ -148,6 +149,17 @@ def get_distro():
         v = f.read().split()
         return '{} {}'.format(v[0], v[1])
 
+
+def get_window_manager():
+    for proc in get_processes():
+        if proc in window_manager_definitions.keys():
+            return window_manager_definitions[proc]
+
+
+def get_processes():
+    processes = os.popen('ps -A').read().splitlines()
+    processes = [line.split()[3] for line in processes]
+    return processes
 
 if __name__ == "__main__":
     main()
