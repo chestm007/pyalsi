@@ -1,3 +1,8 @@
+"""
+This is where im storing the logo's
+basically just a dict, with the key as the name
+"""
+
 logos = {'Archie':
              """{c1}                  .\t\t\t
              {c1}                  #\t\t\t
