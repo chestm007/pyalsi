@@ -13,34 +13,30 @@ from window_managers import window_manager_definitions
 
 
 @click.command()
-@click.option('-n', '--normal-colour')
-@click.option('-b', '--bold-colour')
+@click.option('-n', '--normal-colour', default="white")
+@click.option('-b', '--bold-colour', default="dgrey")
 @click.option('-a', '--archie-logo', is_flag=True)
 @click.option('-s', '--screenfetch-logo', is_flag=True)
 @click.option('-l', '--info-below', is_flag=True)
-def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
+@click.option('-d', '--distro', help="choose: " + ", ".join(logos.keys()))
+@click.option('--logo', help="type 'pyAlsi --logo help' to see valid logos for your distro", default="Archey")
+def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below, distro, logo):
+    if not distro:
+        distro = get_distro()
 
-    # default if no logo selected
-    if not archie_logo and not screenfetch_logo and not info_below:
-        archie_logo = True
+    if logo not in logos[distro]:
+        valid_logos = "Please pick either: {}".format(", ".join(logos[distro].keys()))
+        if logo != 'help':
+            valid_logos = "Invalid logo. {}".format(valid_logos)
+        raise click.UsageError(valid_logos)
 
-    if not normal_colour:
-        normal_colour = "white"
-    if not bold_colour:
-        bold_colour = "dgrey"
     colors = {"c1": normal[normal_colour],
               "c2": bold[bold_colour],
-              "low": normal["green"],
-              "med": normal["yellow"],
-              "high": normal["red"]
+              "low": bold["green"],
+              "med": bold["yellow"],
+              "high": bold["red"],
+              "red": normal["red"]
               }
-
-    if screenfetch_logo:
-        logo = 'Screenfetch'
-    elif archie_logo:
-        logo = 'Archie'
-    elif info_below:
-        logo = 'Below'
 
     if normal_colour not in normal or bold_colour not in bold:
         # if we were passed invalid colour parameters
@@ -51,14 +47,12 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
     ram_use = math.ceil(psutil.virtual_memory().used / 1024 ** 2)
     ram_pct = math.ceil(psutil.virtual_memory().percent)
 
-    os_info = "{} {}".format(get_distro(), platform.machine())
-
-    info = [colorize("OS", os_info),
+    info = [colorize("OS", "{} {}".format(distro, platform.machine())),
             colorize("Hostname", platform.node()),
             colorize("Uptime", get_uptime()),
             colorize("Kernel", platform.release()),
             colorize("Shell", os.readlink('/proc/%d/exe' % os.getppid())),
-            colorize("Packages", len([name for name in os.listdir('/var/lib/pacman/local')])),
+            colorize("Packages", count_packages(distro)),
             colorize("Window Manager", get_window_manager()),
             colorize("RAM", "{} ({})".format(colorize_usage(ram_use, ram_tot, ram_pct, "M"),
                                              colorize_percent(ram_pct, "%"))),
@@ -79,11 +73,11 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
                 disk.fstype, **colors))
 
     if info_below:
-        click.echo("\n".join([line.format(**colors) for line in logos[logo].splitlines()]))
+        click.echo("\n".join([line.format(**colors) for line in logos[distro][logo].splitlines()]))
         click.echo("\n\n")
         click.echo("\n".join(["   " + line.format(**colors) for line in info]))
     else:
-        for i, line in enumerate((logos[logo]).splitlines()):
+        for i, line in enumerate((logos[distro][logo]).splitlines()):
             click.echo("{}".format(line + (info[i] if (i < len(info)) else "")).format(**colors))
     # print(logo.format(c1=color_one,c2=color_two, **info))
 
@@ -132,6 +126,15 @@ def colorize_percent(value, suffix=""):
     return level + str(value) + suffix + "{c1}"
 
 
+def count_packages(distro):
+    if distro == 'Arch Linux':
+        return len([name for name in os.listdir('/var/lib/pacman/local')])
+    elif distro == 'Ubuntu':
+        results = os.popen('dpkg -l |grep ^ii | wc -l').read().splitlines()
+        for result in results:
+            if result:
+                return result
+
 def get_uptime():
     """
     :return: uptime seconds as a human readable time
@@ -142,12 +145,14 @@ def get_uptime():
 
 
 def get_distro():
-    """
-    :return: first 2 words from /etc/issue
-    """
     with open("/etc/issue") as f:
         v = f.read().split()
-        return '{} {}'.format(v[0], v[1])
+        if v[0] == 'Arch':
+            return 'Arch Linux'
+        elif v[0] == 'Apricity':
+            return 'Apricity OS'
+        elif v[0] == 'Ubuntu':
+            return 'Ubuntu'
 
 
 def get_window_manager():
