@@ -7,6 +7,7 @@ import psutil
 import cpuinfo
 import platform
 from datetime import timedelta
+from logos import logos
 
 
 @click.command()
@@ -33,11 +34,11 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
               }
 
     if screenfetch_logo:
-        logo = logos['Screenfetch'].splitlines()
+        logo = 'Screenfetch'
     elif archie_logo:
-        logo = logos['Archie'].splitlines()
+        logo = 'Archie'
     elif info_below:
-        logo = logos['Below'].splitlines()
+        logo = 'Below'
 
     if normal_colour not in normal or bold_colour not in bold:
         # if we were passed invalid colour parameters
@@ -76,11 +77,11 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below):
                 disk.fstype, **colors))
 
     if info_below:
-        click.echo("\n".join([line.format(**colors) for line in logo]))
+        click.echo("\n".join([line.format(**colors) for line in logos[logo].splitlines()]))
         click.echo("\n\n")
         click.echo("\n".join(["   " + line.format(**colors) for line in info]))
     else:
-        for i, line in enumerate(logo):
+        for i, line in enumerate((logos[logo]).splitlines()):
             click.echo("{}".format(line + (info[i] if (i < len(info)) else "")).format(**colors))
     # print(logo.format(c1=color_one,c2=color_two, **info))
 
@@ -168,54 +169,6 @@ bold = {'dgreen':   '\033[1;39m',
         'white':    '\033[1;37m',
         }
 
-logos = {'Archie':
-"""{c1}                  .\t\t\t
-{c1}                  #\t\t\t
-{c1}                 ###\t\t\t
-{c1}                #####\t\t\t
-{c1}                ######\t\t\t
-{c1}               ; #####;\t\t\t
-{c1}              +##.#####\t\t\t
-{c1}             +##########\t\t
-{c1}            ######{c2}#####{c1}##;\t\t
-{c1}           ###{c2}############{c1},\t\t
-{c1}          #{c2}######   #######.\t\t
-{c2}        .######;     ;###;`".\t\t
-{c2}       .#######;     ;#####.\t\t
-{c2}       #########.   .########`\t\t
-{c2}      ######'           '######\t
-{c2}     ;####                 ####;\t
-{c2}     ##'                     '##\t
-{c2}    #'                         `#\t""",
-         'Screenfetch':
-"""{c1}                   -`\t\t\t
-{c1}                  .o+`\t\t\t
-{c1}                 `ooo/\t\t\t
-{c1}                `+oooo:\t\t\t
-{c1}               `+oooooo:\t\t
-{c1}               -+oooooo+:\t\t
-{c1}             `/:-:++oooo+:\t\t
-{c1}            `/++++/+++++++:\t\t
-{c1}           `/++++++++++++++:\t\t
-{c1}          `/+++o{c2}oooooooo{c1}oooo/`\t\t
-{c1}         ./{c2}ooosssso++osssssso{c1}+`\t\t
-{c2}        .oossssso-````/ossssss+`\t
-{c2}       -osssssso.      :ssssssso.\t
-{c2}      :osssssss/        osssso+++.\t
-{c2}     /ossssssss/        +ssssooo/-`\t
-{c2}   `/ossssso+/:-        -:/+osssso+-\t
-{c2}  `+sso+:-`                 `.-/+oso:\t
-{c2} `++:.                           `-/+/\t
-{c2} .`                                 `+/\t""",
-         'Below':
-"""         {c2},{c1}                       _     _ _
-        {c2}/{c1}#{c2}\\{c1}        __ _ _ __ ___| |__ | (_)_ __  _   ___  __
-       {c2}/{c1}###{c2}\\{c1}      / _` | '__/ __| '_ \\| | | '_ \\| | | \\ \\/ /
-      {c2}/{c1}#####{c2}\\{c1}    | (_| | | | (__| | | | | | | | | |_| |)  (
-     {c2}/{c1}##,-,##{c2}\\{c1}    \\__,_|_|  \\___|_| |_|_|_|_| |_|\\__,_/_/\\_\\
-    {c2}/{c1}##(   )##{c2}\\{c1}
-   {c2}/{c1}#.--   --.#{c2}\\   A simple, elegant GNU/Linux distribution.
-  {c2}/{c1}`           `{c2}\\"""}
 
 if __name__ == "__main__":
     main()
