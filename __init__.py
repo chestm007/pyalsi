@@ -6,6 +6,7 @@ import click
 import psutil
 import cpuinfo
 import platform
+import arch_specific_functions
 from datetime import timedelta
 from logos import logos
 from colors import normal, bold
@@ -58,6 +59,13 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below, 
                                              colorize_percent(ram_pct, "%"))),
             colorize("CPU", cpuinfo.get_cpu_info_from_proc_cpuinfo()["brand"]),
             ]
+
+    package_info = ''
+    if distro == 'Arch Linux':
+        package_info = arch_specific_functions.get_pacman_stats()
+
+    for key, value in package_info.iteritems():
+        info.append(colorize(key, value))
 
     for disk in psutil.disk_partitions():
         disk_usage = psutil.disk_usage(disk.mountpoint)
