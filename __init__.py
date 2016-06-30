@@ -7,6 +7,7 @@ import psutil
 import cpuinfo
 import platform
 import arch_specific_functions
+import ubuntu_specific_functions
 from datetime import timedelta
 from logos import logos
 from colors import normal, bold
@@ -48,9 +49,12 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below, 
     ram_use = math.ceil(psutil.virtual_memory().used / 1024 ** 2)
     ram_pct = math.ceil(psutil.virtual_memory().percent)
 
+    a = get_last_login()
+
     info = [colorize("OS", "{} {}".format(distro, platform.machine())),
-            colorize("Hostname", platform.node()),
-            colorize("Uptime", get_uptime()),
+            colorize("Hostname", platform.node())]
+    (info.append(colorize("Last Login From", '{} At {}'.format(a['ip'], a['at'])))) if a else ""
+    info.extend([colorize("Uptime", get_uptime()),
             colorize("Kernel", platform.release()),
             colorize("Shell", os.readlink('/proc/%d/exe' % os.getppid())),
             colorize("Packages", count_packages(distro)),
@@ -58,14 +62,15 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below, 
             colorize("RAM", "{} ({})".format(colorize_usage(ram_use, ram_tot, ram_pct, "M"),
                                              colorize_percent(ram_pct, "%"))),
             colorize("CPU", cpuinfo.get_cpu_info_from_proc_cpuinfo()["brand"]),
-            ]
+            ])
+    for card in get_vga_devices():
+        info.append(colorize("VGA Cards", card))
 
     package_info = ''
     if distro == 'Arch Linux':
-        package_info = arch_specific_functions.get_pacman_stats()
-
-    for key, value in package_info.iteritems():
-        info.append(colorize(key, value))
+        info.extend(colorize(key, value) for key, value in arch_specific_functions.get_package_stats().iteritems())
+    elif distro == 'Ubuntu':
+        info.extend(colorize(key, value) for key, value in ubuntu_specific_functions.get_package_stats().iteritems())
 
     for disk in psutil.disk_partitions():
         disk_usage = psutil.disk_usage(disk.mountpoint)
@@ -169,11 +174,44 @@ def get_window_manager():
             return window_manager_definitions[proc]
 
 
+def get_last_login():
+    out = os.popen("last $USER -i | grep -E -v 'logged'").read()
+    for o in out.splitlines():
+        o = o.split()
+        if len(o) > 1:
+            if not o[-1] == 'in' and not o[0] == 'wtmp':
+                output_dict = {'name': o[0],
+                               'tty':  o[1],
+                               'ip':   o[2],
+                               'at': '{} {} {} {}:{}'.format(o[3], o[4], o[5], o[6], o[7].strip(':-'))}
+                return output_dict
+    return False
+
+
 def get_processes():
     processes = os.popen('ps -A').read().splitlines()
     processes = [line.split()[3] for line in processes]
     return processes
 
+
+def get_vga_devices():
+    out = os.popen("lspci | grep VGA").read().splitlines()
+    cards = {}
+    for line in out:
+        line = line.split(":")[-1]
+        if line in cards.keys():
+            count = cards[line]
+            cards.pop(line)
+            cards[line] = count + 1
+        else:
+            cards[line] = 1
+    output = []
+    if len(cards) > 0:
+        for k, v in cards.iteritems():
+            output.append("{}{}".format(k, ("(x{})".format(v)) if v > 1 else ""))
+    else:
+        return False
+    return output
 if __name__ == "__main__":
     main()
 
