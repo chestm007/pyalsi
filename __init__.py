@@ -53,20 +53,22 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below, 
 
     info = [colorize("OS", "{} {}".format(distro, platform.machine())),
             colorize("Hostname", platform.node())]
-    (info.append(colorize("Last Login From", '{} At {}'.format(a['ip'], a['at'])))) if a else ""
+
+    info.append(colorize("Last Login From", '{} At {}'.format(a['ip'], a['at']))) if a else ""
+
     info.extend([colorize("Uptime", get_uptime()),
-            colorize("Kernel", platform.release()),
-            colorize("Shell", os.readlink('/proc/%d/exe' % os.getppid())),
-            colorize("Packages", count_packages(distro)),
-            colorize("Window Manager", get_window_manager()),
-            colorize("RAM", "{} ({})".format(colorize_usage(ram_use, ram_tot, ram_pct, "M"),
-                                             colorize_percent(ram_pct, "%"))),
-            colorize("CPU", cpuinfo.get_cpu_info_from_proc_cpuinfo()["brand"]),
-            ])
+                 colorize("Kernel", platform.release()),
+                 colorize("Shell", os.readlink('/proc/%d/exe' % os.getppid())),
+                 colorize("Packages", count_packages(distro)),
+                 colorize("Window Manager", get_window_manager()),
+                 colorize("RAM", "{} ({})".format(colorize_usage(ram_use, ram_tot, ram_pct, "M"),
+                                                  colorize_percent(ram_pct, "%"))),
+                 colorize("CPU", get_cpu_info())
+                 ])
+
     for card in get_vga_devices():
         info.append(colorize("VGA Cards", card))
 
-    package_info = ''
     if distro == 'Arch Linux':
         info.extend(colorize(key, value) for key, value in arch_specific_functions.get_package_stats().iteritems())
     elif distro == 'Ubuntu':
@@ -93,6 +95,12 @@ def main(normal_colour, bold_colour, archie_logo, screenfetch_logo, info_below, 
         for i, line in enumerate((logos[distro][logo]).splitlines()):
             click.echo("{}".format(line + (info[i] if (i < len(info)) else "")).format(**colors))
     # print(logo.format(c1=color_one,c2=color_two, **info))
+
+
+def get_cpu_info():
+    cpu = cpuinfo.get_cpu_info_from_proc_cpuinfo()
+    fmt = "{} cores" if cpu["count"] > 1 else "{} core"
+    return "{} ({})".format(cpu["brand"], fmt.format(cpu["count"]))
 
 
 def colorize(heading, value):
