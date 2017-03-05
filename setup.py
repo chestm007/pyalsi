@@ -1,13 +1,18 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 setup(
-        name='pyAlsi',
-        version='0.1',
-        packages=[''],
-        install_requires=['psutil', 'click', 'py-cpuinfo'],
-        url='',
-        license='',
-        author='max',
-        author_email='',
-        description=''
+    name='pyalsi',
+    version='0.3',
+    packages=find_packages(),
+    install_requires=['psutil', 'click', 'py-cpuinfo'],
+    license='GPL2',
+    author='chestm007',
+    author_email='chestm007@hotmail.com',
+    url='https://github.com/chestm007/pyalsi',
+    download_url='https://github.com/chestm007/pyalsi/mypackage/archive/0.3.tar.gz',
+    description='python rewrite of alsi (Arch Linux System Information) to support multiple systems',
+    entry_points="""
+        [console_scripts]
+        pyalsi=pyalsi.__init__:main
+    """,
 )
