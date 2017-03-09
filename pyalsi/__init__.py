@@ -94,4 +94,5 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
     else:
         for i, line in enumerate((logos[system.distro][logo]).splitlines()):
             click.echo("{}".format(line + (info[i] if (i < len(info)) else "")).format(**colors.colors))
+    click.echo('\x1b[0m')  # return terminal colour to normal
 

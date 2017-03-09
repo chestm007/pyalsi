@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyalsi',
-    version='0.3',
+    version='0.4.1',
     packages=find_packages(),
     install_requires=['psutil', 'click', 'py-cpuinfo'],
     license='GPL2',
@@ -15,4 +15,8 @@ setup(
         [console_scripts]
         pyalsi=pyalsi.__init__:cli
     """,
+    requires=[
+        'nose',
+        'mock'
+    ]
 )
