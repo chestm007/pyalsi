@@ -1,4 +1,0 @@
-
-            [console_scripts]
-            pyalsi=pyalsi.__init__:main
-        

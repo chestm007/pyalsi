@@ -14,7 +14,9 @@ class Disk(object):
     def to_info_string(self):
         return ("{c2}{}: {} ({}) ({})".format(
             self.name,
-            colorize_usage(self.usage.used, self.usage.total, self.usage.percent, "G"),
+            colorize_usage(self.usage.used.to_gigabytes(),
+                           self.usage.total.to_gigabytes(),
+                           self.usage.percent, "G"),
             colorize_percent(self.usage.percent, "%"),
             self.fstype, **Colors.colors))
 

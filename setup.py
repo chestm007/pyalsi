@@ -13,6 +13,6 @@ setup(
     description='python rewrite of alsi (Arch Linux System Information) to support multiple systems',
     entry_points="""
         [console_scripts]
-        pyalsi=pyalsi.__init__:main
+        pyalsi=pyalsi.__init__:cli
     """,
 )

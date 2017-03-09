@@ -5,6 +5,7 @@ from pyalsi.window_managers import window_manager_definitions
 
 
 class System(object):
+    distro = "unknown"
     distro_mappings = dict(Arch='Arch Linux', Apricity='Apricity OS', Ubuntu='Ubuntu')
 
     def __init__(self):
@@ -21,15 +22,10 @@ class System(object):
             return str(timedelta(seconds=math.ceil(uptime_seconds)))
 
     def count_packages(self):
-        if self.distro is None:
-            self.distro = self.get_distro()
-        if self.distro == 'Arch Linux':
-            return len([name for name in os.listdir('/var/lib/pacman/local')])
-        elif self.distro == 'Ubuntu':
-            results = os.popen('dpkg -l |grep ^ii | wc -l').read().splitlines()
-            for result in results:
-                if result:
-                    return result
+        return self._count_packages()
+
+    def _count_packages(self):
+        return 'no data'
 
     def get_window_manager(self):
         for proc in self.get_processes():
@@ -65,19 +61,22 @@ class System(object):
             return "Unknown"
         return self.distro_mappings.get(v[0], 'Unknown')
 
-    @staticmethod
-    def get_package_stats():
-        return {'Pending Updates': 'no data'}
+    def get_package_stats(self):
+        return {'Pending Updates': self._get_package_stats()}
+
+    def _get_package_stats(self):
+        return 'no data'
 
 
 class ArchLinuxSystem(System):
     distro = 'Arch Linux'
 
-    @staticmethod
-    def get_package_stats():
+    def _count_packages(self):
+        return len([name for name in os.listdir('/var/lib/pacman/local')])
+
+    def _get_package_stats(self):
         pacman_output = os.popen('pacman -Qu').read().splitlines()
-        pacman_pending_update_count = len(pacman_output)
-        return {'Pending Updates': pacman_pending_update_count}
+        return str(len(pacman_output))
 
 
 class ApricitySystem(ArchLinuxSystem):
@@ -87,8 +86,24 @@ class ApricitySystem(ArchLinuxSystem):
 class UbuntuSystem(System):
     distro = 'Ubuntu'
 
-    @staticmethod
-    def get_package_stats():
+    def _count_packages(self):
+        for result in os.popen('dpkg -l |grep ^ii | wc -l').read().splitlines():
+            if result:
+                return result
+
+    def _get_package_stats(self):
         apt_output = os.popen('/usr/lib/update-notifier/apt-check --human-readable').read().splitlines()
-        apt_pending_update_count = apt_output[0].split()[0]
-        return {'Pending Updates': apt_pending_update_count}
+        return apt_output[0].split()[0]
+
+
+class DebianSystem(System):
+    distro = 'Debian'
+    get_package_stats = UbuntuSystem.get_package_stats
+
+
+class FedoraSystem(System):
+    distro = 'Fedora'
+
+    def count_packages(self):
+        return UbuntuSystem.count_packages
+

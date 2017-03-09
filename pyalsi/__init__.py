@@ -13,6 +13,12 @@ from pyalsi.hardware.cpu.cpu import Cpu
 from pyalsi.hardware.ram.ram import Ram
 from pyalsi.utils.strings import colorize, colorize_usage, colorize_percent, Colors
 
+DEFAULT_DISTRO_LOGO = {'Arch Linux': 'Archey',
+                       'Debian': 'Below',
+                       'Fedora': 'Screenfetch',
+                       'Apricity OS': 'Below',
+                       'Ubuntu': 'Archey'}
+
 cpu, ram, system, vga, disks = Cpu(), Ram(), System(), Pci(), DiskGroup()
 colors = Colors()
 
@@ -40,6 +46,8 @@ def validate_logo(ctx, p, logo):
             if logo != 'help':
                 valid_logos = "Invalid logo. {}".format(valid_logos)
             raise click.UsageError(valid_logos)
+    else:
+        logo = DEFAULT_DISTRO_LOGO[system.distro]
     return logo
 
 
@@ -54,9 +62,12 @@ def set_distro(ctx, p, distro):
 @click.option('-l', '--info-below', is_flag=True)
 @click.option('-d', '--distro', help="choose: " + ", ".join(logos.keys()),
               callback=set_distro)
-@click.option('--logo', help="type 'pyAlsi --logo help' to see valid logos for your distro", default="Archey",
-              callback=validate_logo)
-def main(normal_colour, bold_colour, info_below, distro, logo):
+@click.option('--logo', help="type 'pyAlsi --logo help' to see valid logos for your distro",
+              default=None, callback=validate_logo)
+def cli(normal_colour, bold_colour, info_below, distro, logo):
+    if logo == 'Below':
+        info_below = True
+
     a = system.get_last_login()
     info = [colorize("OS", "{} {}".format(system.distro, platform.machine())),
             colorize("Hostname", platform.node()),
@@ -84,6 +95,3 @@ def main(normal_colour, bold_colour, info_below, distro, logo):
         for i, line in enumerate((logos[system.distro][logo]).splitlines()):
             click.echo("{}".format(line + (info[i] if (i < len(info)) else "")).format(**colors.colors))
 
-
-if __name__ == "__main__":
-    main()
