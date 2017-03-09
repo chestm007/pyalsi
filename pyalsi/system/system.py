@@ -15,17 +15,19 @@ class System(object):
                 self.__class__ = sub
         self.shell = os.readlink('/proc/%d/exe' % os.getppid())
 
+    def get_distro(self):
+        try:
+            with open("/etc/issue") as f:
+                v = f.read().split()
+        except IOError:
+            return "Unknown"
+        return self.distro_mappings.get(v[0], 'Unknown')
+
     @staticmethod
     def get_uptime():
         with open('/proc/uptime', 'r') as f:
             uptime_seconds = float(f.readline().split()[0])
             return str(timedelta(seconds=math.ceil(uptime_seconds)))
-
-    def count_packages(self):
-        return self._count_packages()
-
-    def _count_packages(self):
-        return 'no data'
 
     def get_window_manager(self):
         for proc in self.get_processes():
@@ -53,18 +55,16 @@ class System(object):
         processes = [line.split()[3] for line in processes]
         return processes
 
-    def get_distro(self):
-        try:
-            with open("/etc/issue") as f:
-                v = f.read().split()
-        except IOError:
-            return "Unknown"
-        return self.distro_mappings.get(v[0], 'Unknown')
-
     def get_package_stats(self):
         return {'Pending Updates': self._get_package_stats()}
 
     def _get_package_stats(self):
+        return 'no data'
+
+    def count_packages(self):
+        return self._count_packages()
+
+    def _count_packages(self):
         return 'no data'
 
 
@@ -72,38 +72,57 @@ class ArchLinuxSystem(System):
     distro = 'Arch Linux'
 
     def _count_packages(self):
-        return len([name for name in os.listdir('/var/lib/pacman/local')])
+        return PackageManager.Pacman.count_packages
 
     def _get_package_stats(self):
-        pacman_output = os.popen('pacman -Qu').read().splitlines()
-        return str(len(pacman_output))
+        return PackageManager.Pacman.get_package_stats
 
 
 class ApricitySystem(ArchLinuxSystem):
     distro = 'Apricity OS'
 
 
-class UbuntuSystem(System):
-    distro = 'Ubuntu'
-
-    def _count_packages(self):
-        for result in os.popen('dpkg -l |grep ^ii | wc -l').read().splitlines():
-            if result:
-                return result
-
-    def _get_package_stats(self):
-        apt_output = os.popen('/usr/lib/update-notifier/apt-check --human-readable').read().splitlines()
-        return apt_output[0].split()[0]
-
-
 class DebianSystem(System):
     distro = 'Debian'
-    get_package_stats = UbuntuSystem.get_package_stats
+
+    def _count_packages(self):
+        return PackageManager.Dpkg.count_packages
+
+
+class UbuntuSystem(DebianSystem):
+    distro = 'Ubuntu'
+
+    def _get_package_stats(self):
+        return PackageManager.Apt.get_package_stats
 
 
 class FedoraSystem(System):
     distro = 'Fedora'
 
-    def count_packages(self):
-        return UbuntuSystem.count_packages
+    def _count_packages(self):
+        return PackageManager.Dpkg.count_packages
 
+
+class PackageManager(object):
+    class Dpkg(object):
+        @staticmethod
+        def count_packages():
+            for result in os.popen('dpkg -l |grep ^ii | wc -l').read().splitlines():
+                if result:
+                    return result
+
+    class Apt(object):
+        @staticmethod
+        def get_package_stats():
+            apt_output = os.popen('/usr/lib/update-notifier/apt-check --human-readable').read().splitlines()
+            return apt_output[0].split()[0]
+
+    class Pacman(object):
+        @staticmethod
+        def count_packages():
+            return len([name for name in os.listdir('/var/lib/pacman/local')])
+
+        @staticmethod
+        def get_package_stats():
+            pacman_output = os.popen('pacman -Qu').read().splitlines()
+            return str(len(pacman_output))
