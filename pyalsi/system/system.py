@@ -6,22 +6,29 @@ from pyalsi.window_managers import window_manager_definitions
 
 class System(object):
     distro = "unknown"
-    distro_mappings = dict(Arch='Arch Linux', Apricity='Apricity OS', Ubuntu='Ubuntu')
+    friendly_distro = 'Unknown'
+    distro_subclass_map = {}
 
     def __init__(self):
         self.distro = self.get_distro()
         for sub in System.__subclasses__():
+            self.distro_subclass_map[sub.distro] = sub
             if self.distro == sub.distro:
                 self.__class__ = sub
+            for s in sub.__subclasses__():
+                self.distro_subclass_map[s.distro] = s
+                if self.distro == s.distro:
+                    self.__class__ = s
+
         self.shell = os.readlink('/proc/%d/exe' % os.getppid())
 
     def get_distro(self):
         try:
-            with open("/etc/issue") as f:
-                v = f.read().split()
+            for line in os.popen("cat /etc/*-release").read().splitlines():
+                if line.startswith('NAME='):
+                    return line.split('=')[1].strip('"')
         except IOError:
             return "Unknown"
-        return self.distro_mappings.get(v[0], 'Unknown')
 
     @staticmethod
     def get_uptime():
@@ -69,38 +76,43 @@ class System(object):
 
 
 class ArchLinuxSystem(System):
-    distro = 'Arch Linux'
+    distro = 'Arch'
+    friendly_distro = 'Arch Linux'
 
     def _count_packages(self):
-        return PackageManager.Pacman.count_packages
+        return PackageManager.Pacman.count_packages()
 
     def _get_package_stats(self):
-        return PackageManager.Pacman.get_package_stats
+        return PackageManager.Pacman.get_package_stats()
 
 
 class ApricitySystem(ArchLinuxSystem):
     distro = 'Apricity OS'
+    friendly_distro = 'Apricity OS'
 
 
 class DebianSystem(System):
     distro = 'Debian'
+    friendly_distro = distro
 
     def _count_packages(self):
-        return PackageManager.Dpkg.count_packages
+        return PackageManager.Dpkg.count_packages()
 
 
 class UbuntuSystem(DebianSystem):
     distro = 'Ubuntu'
+    friendly_distro = distro
 
     def _get_package_stats(self):
-        return PackageManager.Apt.get_package_stats
+        return PackageManager.Apt.get_package_stats()
 
 
 class FedoraSystem(System):
     distro = 'Fedora'
+    friendly_distro = distro
 
     def _count_packages(self):
-        return PackageManager.Dpkg.count_packages
+        return PackageManager.Dpkg.count_packages()
 
 
 class PackageManager(object):
