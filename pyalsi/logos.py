@@ -4,7 +4,7 @@ basically just a dict, with the key as the name
 """
 
 logos = {'Arch Linux': {
-    'Archey':
+    'Archey':  # ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
         """{c1}                  .\t\t\t
         {c1}                  #\t\t\t
         {c1}                 ###\t\t\t
