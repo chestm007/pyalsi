@@ -3,6 +3,8 @@
 import click
 import platform
 
+import sys
+
 from pyalsi.logos import logos
 from colors import normal, bold
 from pyalsi.hardware.disks.disk import DiskGroup
@@ -47,14 +49,17 @@ def validate_logo(ctx, p, logo):
                 valid_logos = "Invalid logo. {}".format(valid_logos)
             raise click.UsageError(valid_logos)
     else:
-        logo = DEFAULT_DISTRO_LOGO[system.distro]
+        logo = DEFAULT_DISTRO_LOGO[system.friendly_distro]
     return logo
 
 
 def set_distro(ctx, p, distro):
     if distro is not None:
+        if distro not in logos.keys():
+            raise click.UsageError('distro must be one of ({})'.format('|'.join(logos.keys())))
         system.distro = distro
-
+        system.friendly_distro = system.distro_subclass_map[distro].friendly_distro
+    return distro
 
 @click.command()
 @click.option('-n', '--normal-colour', default="white", callback=set_color_one)
@@ -69,7 +74,7 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
         info_below = True
 
     a = system.get_last_login()
-    info = [colorize("OS", "{} {}".format(system.distro, platform.machine())),
+    info = [colorize("OS", "{} {}".format(system.friendly_distro, platform.machine())),
             colorize("Hostname", platform.node()),
             colorize("Last Login From", '{} At {}'.format(a['ip'], a['at'])),
             colorize("Uptime", system.get_uptime()),
@@ -96,3 +101,8 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
             click.echo("{}".format(line + (info[i] if (i < len(info)) else "")).format(**colors.colors))
     click.echo('\x1b[0m')  # return terminal colour to normal
 
+
+# compatibility for debugging in pyCharm.
+if __name__ == '__main__':
+    print sys.argv
+    cli(sys.argv[1:])

@@ -3,9 +3,9 @@ This is where im storing the logo's
 basically just a dict, with the key as the name
 """
 
-logos = {'Arch Linux': {
+logos = {'Arch': {
     'Archey':  # ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
-        """{c1}                  .\t\t\t
+        """{c1}                          .\t\t\t
         {c1}                  #\t\t\t
         {c1}                 ###\t\t\t
         {c1}                #####\t\t\t
@@ -93,25 +93,24 @@ logos = {'Arch Linux': {
     },
     'Fedora': {
         'Screenfetch':
-            """
-{c1}          /:-------------:\\
-{c1}       :-------------------::
-{c1}     :-----------{c2}/shhOHbmp{c1}---:\\
-{c1}   /-----------{c2}omMMMNNNMMD{c1}  ---:
-{c1}  :-----------{c2}sMMMMNMNMP{c1}     ---:
-{c1} :-----------{c2}:MMMdp{c1}-----      ---
-{c1},------------{c2}:MMMd{c1}------      ---:
-{c1}:------------{c2}:MMMd{c1}-----      .---:
-{c1}:----    {c2}oNMMMMMMMMMMho{c1}     .----:
-{c1}:--      {c2}+shhhMMMmhhy++{c1}   .------
-{c1}:-      -----{c2}:MMMd{c1}--------------:
-{c1}:-     ------{c2}/MMMd{c1}-------------;
-{c1}:-    {c2}..{c1}----{c2}/hMMMy{c1}------------:
-{c1}:-- {c2}:dMNdhhdNMMNo{c1}------------;
-{c1}:---{c2}:sdNMMMMNds:{c1}------------:
-{c1}:------{c2}:://:{c1}--------------::
-{c1}:----------------------://
-
+            """\t\t\t\t\t\t\t\t\t
+{c1}          /:-------------:\\\t\t\t
+{c1}       :-------------------::\t\t
+{c1}     :-----------{c2}/shhOHbmp{c1}---:\\\t\t
+{c1}   /-----------{c2}omMMMNNNMMD{c1}  ---:\t
+{c1}  :-----------{c2}sMMMMNMNMP{c1}     ---:\t
+{c1} :-----------{c2}:MMMdp{c1}-----      ---\t
+{c1},------------{c2}:MMMd{c1}------      ---:\t
+{c1}:------------{c2}:MMMd{c1}-----      .---:\t
+{c1}:----    {c2}oNMMMMMMMMMMho{c1}     .----:\t
+{c1}:--      {c2}+shhhMMMmhhy++{c1}   .------\t
+{c1}:-      -----{c2}:MMMd{c1}--------------:\t
+{c1}:-     ------{c2}/MMMd{c1}-------------;\t
+{c1}:-    {c2}..{c1}----{c2}/hMMMy{c1}------------:\t\t
+{c1}:-- {c2}:dMNdhhdNMMNo{c1}------------;\t\t
+{c1}:---{c2}:sdNMMMMNds:{c1}------------:\t\t
+{c1}:------{c2}:://:{c1}--------------::\t\t
+{c1}:----------------------://\t\t\t
 """
     },
     'Apricity OS': {
