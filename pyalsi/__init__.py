@@ -21,27 +21,34 @@ DEFAULT_DISTRO_LOGO = {'Arch Linux': 'Archey',
                        'Apricity OS': 'Below',
                        'Ubuntu': 'Archey'}
 
-cpu, ram, system, vga, disks = Cpu(), Ram(), System(), Pci(), DiskGroup()
-colors = Colors()
-
-
-def set_color_one(ctx, p, n):
-    if n not in normal:
-        invalid_colour_warning()
-    colors.set('c1', normal[n])
-
-
-def set_color_two(ctx, p, b):
-    if b not in bold:
-        invalid_colour_warning()
-    colors.set('c2', bold[b])
 
 
 def invalid_colour_warning():
     raise click.UsageError('color must be one of {}'.format(', '.join(normal)))
 
 
-def validate_logo(ctx, p, logo):
+@click.command()
+@click.option('-n', '--normal-colour', default="white")
+@click.option('-b', '--bold-colour', default="dgrey")
+@click.option('-l', '--info-below', is_flag=True)
+@click.option('-d', '--distro', help="choose: " + ", ".join(logos.keys()),
+              default=None)
+@click.option('--logo', help="type 'pyAlsi --logo help' to see valid logos for your distro",
+              default=None)
+def cli(normal_colour, bold_colour, info_below, distro, logo):
+    colors = Colors()
+    if normal_colour not in normal:
+        invalid_colour_warning()
+    colors.set('c1', normal[normal_colour])
+    if bold_colour not in bold:
+        invalid_colour_warning()
+    colors.set('c2', bold[bold_colour])
+    cpu, ram, system, vga, disks = Cpu(), Ram(), System(), Pci(), DiskGroup()
+    if distro is not None:
+        if distro not in logos.keys():
+            raise click.UsageError('distro must be one of ({})'.format('|'.join(logos.keys())))
+        system.distro = distro
+        system.friendly_distro = System.distro_subclass_map[distro].friendly_distro
     if logo is not None:
         if logo not in logos[system.distro]:
             valid_logos = "Please pick either: {}".format(", ".join(logos[system.distro].keys()))
@@ -50,34 +57,14 @@ def validate_logo(ctx, p, logo):
             raise click.UsageError(valid_logos)
     else:
         logo = DEFAULT_DISTRO_LOGO[system.friendly_distro]
-    return logo
-
-
-def set_distro(ctx, p, distro):
-    if distro is not None:
-        if distro not in logos.keys():
-            raise click.UsageError('distro must be one of ({})'.format('|'.join(logos.keys())))
-        system.distro = distro
-        system.friendly_distro = system.distro_subclass_map[distro].friendly_distro
-    return distro
-
-@click.command()
-@click.option('-n', '--normal-colour', default="white", callback=set_color_one)
-@click.option('-b', '--bold-colour', default="dgrey", callback=set_color_two)
-@click.option('-l', '--info-below', is_flag=True)
-@click.option('-d', '--distro', help="choose: " + ", ".join(logos.keys()),
-              callback=set_distro)
-@click.option('--logo', help="type 'pyAlsi --logo help' to see valid logos for your distro",
-              default=None, callback=validate_logo)
-def cli(normal_colour, bold_colour, info_below, distro, logo):
     if logo == 'Below':
         info_below = True
 
-    a = system.get_last_login()
+    a = System.get_last_login()
     info = [colorize("OS", "{} {}".format(system.friendly_distro, platform.machine())),
             colorize("Hostname", platform.node()),
             colorize("Last Login From", '{} At {}'.format(a['ip'], a['at'])),
-            colorize("Uptime", system.get_uptime()),
+            colorize("Uptime", System.get_uptime()),
             colorize("Kernel", platform.release()),
             colorize("Shell", system.shell),
             colorize("Packages", system.count_packages()),

@@ -12,13 +12,14 @@ class System(object):
     def __init__(self):
         self.distro = self.get_distro()
         for sub in System.__subclasses__():
-            self.distro_subclass_map[sub.distro] = sub
-            if self.distro == sub.distro:
-                self.__class__ = sub
-            for s in sub.__subclasses__():
-                self.distro_subclass_map[s.distro] = s
-                if self.distro == s.distro:
-                    self.__class__ = s
+            if sub.distro != 'unknown':
+                self.distro_subclass_map[sub.distro] = sub
+                if self.distro == sub.distro:
+                    self.__class__ = sub
+                for s in sub.__subclasses__():
+                    self.distro_subclass_map[s.distro] = s
+                    if self.distro == s.distro:
+                        self.__class__ = s
 
         self.shell = os.readlink('/proc/%d/exe' % os.getppid())
 
