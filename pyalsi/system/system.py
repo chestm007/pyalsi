@@ -129,6 +129,15 @@ class PackageManager(object):
             apt_output = os.popen('/usr/lib/update-notifier/apt-check --human-readable').read().splitlines()
             return apt_output[0].split()[0]
 
+    class Dnf(object):
+        @staticmethod
+        def get_package_stats():
+            pass
+
+        @staticmethod
+        def count_packages():
+            pass
+
     class Pacman(object):
         @staticmethod
         def count_packages():

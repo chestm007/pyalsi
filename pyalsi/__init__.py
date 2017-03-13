@@ -93,11 +93,11 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
     info.extend(disk.to_info_string() for disk in disks.disks)
 
     if info_below:
-        click.echo("\n".join([line.format(**colors.colors) for line in logos[system.distro][logo].splitlines()]))
+        click.echo("\n".join([line.format(**colors.colors) for line in logos[system.distro][logo].replace('XX', '').splitlines()]))
         click.echo("\n\n")
         click.echo("\n".join(["   " + line.format(**colors.colors) for line in info]))
     else:
-        for i, line in enumerate((logos[system.distro][logo]).splitlines()):
+        for i, line in enumerate((logos[system.distro][logo]).replace('XX', '').splitlines()):
             click.echo("{}".format(line + (info[i] if (i < len(info)) else "")).format(**colors.colors))
     click.echo('\x1b[0m')  # return terminal colour to normal
 

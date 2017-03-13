@@ -5,44 +5,44 @@ basically just a dict, with the key as the name
 
 logos = {'Arch': {
     'Archey':  # ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
-        """{c1}                          .\t\t\t
-        {c1}                  #\t\t\t
-        {c1}                 ###\t\t\t
-        {c1}                #####\t\t\t
-        {c1}                ######\t\t\t
-        {c1}               ; #####;\t\t\t
-        {c1}              +##.#####\t\t\t
-        {c1}             +##########\t\t
-        {c1}            ######{c2}#####{c1}##;\t\t
-        {c1}           ###{c2}############{c1},\t\t
-        {c1}          #{c2}######   #######.\t\t
-        {c2}        .######;     ;###;`".\t\t
-        {c2}       .#######;     ;#####.\t\t
-        {c2}       #########.   .########`\t\t
-        {c2}      ######'           '######\t\t
-        {c2}     ;####                 ####;\t
-        {c2}     ##'                     '##\t
-        {c2}    #'                         `#\t""",
+        """{c1}                          .                    XX
+        {c1}                  #                    XX
+        {c1}                 ###                   XX
+        {c1}                #####                  XX
+        {c1}                ######                 XX
+        {c1}               ; #####;                XX
+        {c1}              +##.#####                XX
+        {c1}             +##########               XX
+        {c1}            ######{c2}#####{c1}##;             XX
+        {c1}           ###{c2}############{c1},            XX
+        {c1}          #{c2}######   #######.           XX
+        {c2}        .######;     ;###;`".          XX
+        {c2}       .#######;     ;#####.           XX
+        {c2}       #########.   .########`         XX
+        {c2}      ######'           '######        XX
+        {c2}     ;####                 ####;       XX
+        {c2}     ##'                     '##       XX
+        {c2}    #'                         `#      """,
     'Screenfetch':
-        """{c1}                   -`\t\t\t
-        {c1}                  .o+`\t\t\t
-        {c1}                 `ooo/\t\t\t
-        {c1}                `+oooo:\t\t\t
-        {c1}               `+oooooo:\t\t
-        {c1}               -+oooooo+:\t\t
-        {c1}             `/:-:++oooo+:\t\t
-        {c1}            `/++++/+++++++:\t\t
-        {c1}           `/++++++++++++++:\t\t
-        {c1}          `/+++o{c2}oooooooo{c1}oooo/`\t\t
-        {c1}         ./{c2}ooosssso++osssssso{c1}+`\t\t
-        {c2}        .oossssso-````/ossssss+`\t
-        {c2}       -osssssso.      :ssssssso.\t
-        {c2}      :osssssss/        osssso+++.\t
-        {c2}     /ossssssss/        +ssssooo/-`\t
-        {c2}   `/ossssso+/:-        -:/+osssso+-\t
-        {c2}  `+sso+:-`                 `.-/+oso:\t
-        {c2} `++:.                           `-/+/\t
-        {c2} .`                                 `+/\t""",
+        """{c1}                           `                        XX
+        {c1}                  .o+`                      XX
+        {c1}                 `ooo/                      XX
+        {c1}                `+oooo:                     XX
+        {c1}               `+oooooo:                    XX
+        {c1}               -+oooooo+:                   XX
+        {c1}             `/:-:++oooo+:                  XX
+        {c1}            `/++++/+++++++:                 XX
+        {c1}           `/++++++++++++++:                XX
+        {c1}          `/+++o{c2}oooooooo{c1}oooo/`              XX
+        {c1}         ./{c2}ooosssso++osssssso{c1}+`             XX
+        {c2}        .oossssso-````/ossssss+`            XX
+        {c2}       -osssssso.      :ssssssso.           XX
+        {c2}      :osssssss/        osssso+++.          XX
+        {c2}     /ossssssss/        +ssssooo/-`         XX
+        {c2}   `/ossssso+/:-        -:/+osssso+-        XX
+        {c2}  `+sso+:-`                 `.-/+oso:       XX
+        {c2} `++:.                           `-/+/      XX
+        {c2} .`                                 `+/     """,
     'Below':
         """
         {c2},{c1}                   _     _ _
@@ -55,24 +55,24 @@ logos = {'Arch': {
 {c2}/{c1}`           `{c2}\\"""},
     'Ubuntu': {
         'Archey':
-            """\t\t\t\t\t
-{red}                          .oyhhs:\t
-{high}                 ..__.., {red}shhhhhh-\t
-{high}               -+++++++++'{red}:yyhhyo'\t
-{med}          .--  {high}-++++++++/-.-{red}::-'\t
-{med}        .::::-    {high}:----:/+++/++/.\t
-{med}       -:::::-.          {high}.:++++++:\t
-{high}  ,,, {med}.:::::-'             {high}.++++++-\t
-{high}./+++\-{med}'-::-                {high}./////:\t
-{high}+++++++ {med}.::-\t\t\t\t
-{high}'\+++/-'{med}-::-                {red}:yyyyyo\t
-{high}  ''' '{med}-::::-              {red}:yhhhhh:\t
-{med}      -:::::-.           {red}-ohhhhhh+\t
-{med}       .::::-'  {red}-o+///+oyhhyyyhy:\t
-{med}        '.--   {red}/yhhhhhhhy+{med},....\t\t
-{red}               /hhhhhhhhh{med}-.-:::;\t\t
-{red}               '.:://::- {med}-:::::;\t\t
-{med}                         '.-:-'\t\t\t"""
+            """                                            XX
+{red}                          .oyhhs:           XX
+{high}                 ..__.., {red}shhhhhh-           XX
+{high}               -+++++++++'{red}:yyhhyo'          XX
+{med}          .--  {high}-++++++++/-.-{red}::-'            XX
+{med}        .::::-    {high}:----:/+++/++/.           XX
+{med}       -:::::-.          {high}.:++++++:          XX
+{high}  ,,, {med}.:::::-'             {high}.++++++-         XX
+{high}./+++\-{med}'-::-                {high}./////:         XX
+{high}+++++++ {med}.::-                                XX
+{high}'\+++/-'{med}-::-                {red}:yyyyyo         XX
+{high}  ''' '{med}-::::-              {red}:yhhhhh:         XX
+{med}      -:::::-.           {red}-ohhhhhh+          XX
+{med}       .::::-'  {red}-o+///+oyhhyyyhy:           XX
+{med}        '.--   {red}/yhhhhhhhy+{med},....           XX
+{red}               /hhhhhhhhh{med}-.-:::;            XX
+{red}               '.:://::- {med}-:::::;            XX
+{med}                         '.-:-'                """
     },
     'Debian': {
         'Below':
@@ -93,24 +93,24 @@ logos = {'Arch': {
     },
     'Fedora': {
         'Screenfetch':
-            """\t\t\t\t\t\t\t\t\t
-{c1}          /:-------------:\\\t\t\t
-{c1}       :-------------------::\t\t
-{c1}     :-----------{c2}/shhOHbmp{c1}---:\\\t\t
-{c1}   /-----------{c2}omMMMNNNMMD{c1}  ---:\t
-{c1}  :-----------{c2}sMMMMNMNMP{c1}     ---:\t
-{c1} :-----------{c2}:MMMdp{c1}-----      ---\t
-{c1},------------{c2}:MMMd{c1}------      ---:\t
-{c1}:------------{c2}:MMMd{c1}-----      .---:\t
-{c1}:----    {c2}oNMMMMMMMMMMho{c1}     .----:\t
-{c1}:--      {c2}+shhhMMMmhhy++{c1}   .------\t
-{c1}:-      -----{c2}:MMMd{c1}--------------:\t
-{c1}:-     ------{c2}/MMMd{c1}-------------;\t
-{c1}:-    {c2}..{c1}----{c2}/hMMMy{c1}------------:\t\t
-{c1}:-- {c2}:dMNdhhdNMMNo{c1}------------;\t\t
-{c1}:---{c2}:sdNMMMMNds:{c1}------------:\t\t
-{c1}:------{c2}:://:{c1}--------------::\t\t
-{c1}:----------------------://\t\t\t
+            """                                         XX
+{c1}          /:-------------:               XX
+{c1}       :-------------------::            XX
+{c1}     :-----------{c2}/shhOHbmp{c1}---:\\          XX
+{c1}   /-----------{c2}omMMMNNNMMD{c1}  ---:         XX
+{c1}  :-----------{c2}sMMMMNMNMP{c1}     ---:        XX
+{c1} :-----------{c2}:MMMdp{c1}-----      ---:       XX
+{c1},------------{c2}:MMMd{c1}------      ---:       XX
+{c1}:------------{c2}:MMMd{c1}-----      .---:       XX
+{c1}:----    {c2}oNMMMMMMMMMMho{c1}     .----:       XX
+{c1}:--      {c2}+shhhMMMmhhy++{c1}   .------        XX
+{c1}:-      -----{c2}:MMMd{c1}--------------:        XX
+{c1}:-     ------{c2}/MMMd{c1}-------------;         XX
+{c1}:-    {c2}..{c1}----{c2}/hMMMy{c1}------------:          XX
+{c1}:-- {c2}:dMNdhhdNMMNo{c1}------------;           XX
+{c1}:---{c2}:sdNMMMMNds:{c1}------------:            XX
+{c1}:------{c2}:://:{c1}--------------::             XX
+{c1}:----------------------://               XX
 """
     },
     'Apricity OS': {
