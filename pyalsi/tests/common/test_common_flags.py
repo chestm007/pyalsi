@@ -18,7 +18,11 @@ class TestCommonCommandFlags(BaseTest):
     def test_distro_flag_functionality(self):
         for distro in System().distro_subclass_map.keys():
             result = self.runner.invoke(cli, ['-d', distro])
-            self.assertIn(distro, result.output)
+            if distro == 'Antergos Linux':
+                dist = 'Arch Linux'
+            else:
+                dist = distro
+            self.assertIn(dist, result.output)
             self.assertEqual(result.exit_code, 0)
 
     @attr('medium')
@@ -26,7 +30,11 @@ class TestCommonCommandFlags(BaseTest):
         for distro in System().distro_subclass_map.keys():
             for logo in logos[distro]:
                 result = self.runner.invoke(cli, ['-d', distro, '--logo', logo])
-                self.assertIn(distro, result.output)
+                if distro == 'Antergos Linux':
+                    dist = 'Arch Linux'
+                else:
+                    dist = distro
+                self.assertIn(dist, result.output)
                 self.assertEqual(result.exit_code, 0)
 
     @attr('large')

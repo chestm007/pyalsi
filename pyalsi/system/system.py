@@ -92,6 +92,12 @@ class ApricitySystem(ArchLinuxSystem):
     friendly_distro = 'Apricity OS'
 
 
+class AntergosSystem(ArchLinuxSystem):
+    distro = 'Antergos Linux'
+    friendly_distro = 'Arch Linux'
+
+
+
 class DebianSystem(System):
     distro = 'Debian'
     friendly_distro = distro

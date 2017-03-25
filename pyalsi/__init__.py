@@ -91,5 +91,4 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
 
 # compatibility for debugging in pyCharm.
 if __name__ == '__main__':
-    print sys.argv
     cli(sys.argv[1:])

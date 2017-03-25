@@ -129,3 +129,4 @@ logos = {'Arch': {
                             {c1}{c2}{c1}{c2}{c1}{c1}{c1}{c1}'###'
 """
     }}
+logos['Antergos Linux'] = logos['Arch']
