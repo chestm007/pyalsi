@@ -12,7 +12,7 @@ class TestDiskUnit(BaseTest):
     def test_diskgroup(self):
         def ensure_byte_unit_displayed(disk):
             found = False
-            ugh = disk.to_info_string()[1]
+            ugh = disk.info_string[1]
             for unit in Bytes.mappings:
                 if unit.upper() in ugh:
                     found = True

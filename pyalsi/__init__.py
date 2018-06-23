@@ -5,7 +5,7 @@ import sys
 from pyalsi.logos import logos
 from pyalsi.colors import normal, bold
 from pyalsi.hardware.disks.disk import DiskGroup
-from pyalsi.hardware.vga.vga import VgaCard, Pci
+from pyalsi.hardware.vga.vga import Vga
 from pyalsi.system.system import System
 from pyalsi.utils.types import Bytes
 from pyalsi.window_managers import window_manager_definitions
@@ -33,12 +33,12 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
 
     colors = Colors(primary=normal[normal_colour], secondary=bold[bold_colour])
 
-    cpu, ram, system, vga, disks = Cpu(), Ram(), System(), Pci(), DiskGroup()
+    cpu, ram, system, vga, disks = Cpu(), Ram(), System(), Vga(), DiskGroup()
 
     if distro is not None:
         if distro not in logos.keys():
             raise click.UsageError('distro must be one of ({})'.format('|'.join(logos.keys())))
-        system.distro = distro
+        system._distro = distro
         system.friendly_distro = System.distro_subclass_map[distro].friendly_distro
 
     if logo is not None:
@@ -52,23 +52,23 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
 
     info_below = logo == 'Below'
 
-    last_login = System.get_last_login()
+    last_login = system.last_login
     info = [("OS", "{} {}".format(system.friendly_distro, platform.machine())),
             ("Hostname", platform.node()),
             ("Last Login From", '{} At {}'.format(last_login['ip'], last_login['at'])),
-            ("Uptime", System.get_uptime()),
+            ("Uptime", System.uptime),
             ("Kernel", platform.release()),
             ("Shell", system.shell),
-            ("Packages", system.count_packages()),
-            ("Window Manager", system.get_window_manager()),
+            ("Packages", system.num_packages),
+            ("Window Manager", system.window_manager),
             ("RAM", "{} ({})".format(
-                colorize_usage(ram.get_used().megabytes, ram.get_total().megabytes, ram.percent, "M"),
+                colorize_usage(ram.used.megabytes, ram.total.megabytes, ram.percent, "M"),
                 colorize_percent(ram.percent, "%"))),
-            ("CPU", cpu.to_info_string())]
+            ("CPU", cpu.info_string)]
 
-    info.extend(("VGA Cards", card) for card in vga.get_vga_devices())
-    info.extend((key, value) for key, value in system.get_package_stats().items())
-    info.extend(disk.to_info_string() for disk in disks.disks)
+    info.extend(("VGA Cards", card) for card in vga.devices)
+    info.extend((key, value) for key, value in system.package_stats.items())
+    info.extend(disk.info_string for disk in disks.disks)
 
     if info_below:
         click.echo("\n".join([line.format(**colors.colors) for line in logos[system.distro][logo].replace('XX', '').splitlines()]))

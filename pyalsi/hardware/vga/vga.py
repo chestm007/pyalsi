@@ -5,9 +5,9 @@ class VgaCard(object):
     pass
 
 
-class Pci(object):
-    @staticmethod
-    def get_vga_devices():
+class Vga(object):
+    @property
+    def devices(self):
         out = os.popen("lspci | grep VGA").read().splitlines()
         cards = {}
         for line in out:

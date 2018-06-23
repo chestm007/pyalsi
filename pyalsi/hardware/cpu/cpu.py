@@ -7,6 +7,7 @@ class Cpu(object):
         self.count = info.get('count')
         self.brand = info.get('brand')
 
-    def to_info_string(self):
+    @property
+    def info_string(self):
         fmt = "{} cores" if self.count > 1 else "{} core"
         return "{} ({})".format(self.brand, fmt.format(self.count))

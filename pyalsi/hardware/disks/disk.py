@@ -17,7 +17,8 @@ class Disk(object):
         self.name = name.capitalize() if name != "" else "Root"  # Type: str
         self.fstype = disk.fstype
 
-    def to_info_string(self):
+    @property
+    def info_string(self):
         used, unit = self.usage.used.to_human()
         total, unit = self.usage.total.to_human()
 

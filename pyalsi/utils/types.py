@@ -5,6 +5,7 @@ class Bytes:
                   'megabytes': 2,
                   'gigabytes': 3,
                   'terrabytes': 4}
+
     mappings = ['b', 'kb', 'mb', 'gb', 'tb']
 
     # these are only here for autocomplete
