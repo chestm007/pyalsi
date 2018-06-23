@@ -1,3 +1,4 @@
+from pyalsi import Bytes
 from pyalsi.hardware.disks.disk import Disk, DiskGroup
 from nose.plugins.attrib import attr
 
@@ -9,6 +10,15 @@ from pyalsi.utils.strings import Colors
 class TestDiskUnit(BaseTest):
 
     def test_diskgroup(self):
+        def ensure_byte_unit_displayed(disk):
+            found = False
+            ugh = disk.to_info_string()[1]
+            for unit in Bytes.mappings:
+                if unit.upper() in ugh:
+                    found = True
+                    break
+            self.assertTrue(found)
+
         Colors.colors['c2'] = ''
         haz_root = False
         group = DiskGroup()
@@ -18,5 +28,5 @@ class TestDiskUnit(BaseTest):
             self.assertIsInstance(disk, Disk)
             if disk.name == 'Root':
                 haz_root = True
-            self.assertIn('G', disk.to_info_string()[1])
+                ensure_byte_unit_displayed(disk)
         self.assertTrue(haz_root)

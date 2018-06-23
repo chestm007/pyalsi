@@ -7,6 +7,7 @@ from pyalsi.colors import normal, bold
 from pyalsi.hardware.disks.disk import DiskGroup
 from pyalsi.hardware.vga.vga import VgaCard, Pci
 from pyalsi.system.system import System
+from pyalsi.utils.types import Bytes
 from pyalsi.window_managers import window_manager_definitions
 from pyalsi.hardware.cpu.cpu import Cpu
 from pyalsi.hardware.ram.ram import Ram
@@ -61,7 +62,7 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
             ("Packages", system.count_packages()),
             ("Window Manager", system.get_window_manager()),
             ("RAM", "{} ({})".format(
-                colorize_usage(ram.get_used().to_megabytes(), ram.get_total().to_megabytes(), ram.percent, "M"),
+                colorize_usage(ram.get_used().megabytes, ram.get_total().megabytes, ram.percent, "M"),
                 colorize_percent(ram.percent, "%"))),
             ("CPU", cpu.to_info_string())]
 

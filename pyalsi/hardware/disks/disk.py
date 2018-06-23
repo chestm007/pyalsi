@@ -18,10 +18,13 @@ class Disk(object):
         self.fstype = disk.fstype
 
     def to_info_string(self):
-        return ("{}:".format(self.name), " {} ({}) ({})".format(
-            colorize_usage(self.usage.used.to_gigabytes(),
-                           self.usage.total.to_gigabytes(),
-                           self.usage.percent, "G"),
+        used, unit = self.usage.used.to_human()
+        total, unit = self.usage.total.to_human()
+
+        return ("{}".format(self.name), " {} ({}) ({})".format(
+            colorize_usage(used,
+                           total,
+                           self.usage.percent, unit.upper()),
             colorize_percent(self.usage.percent, "%"),
             self.fstype, **Colors.colors))
 
