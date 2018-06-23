@@ -18,5 +18,5 @@ class TestDiskUnit(BaseTest):
             self.assertIsInstance(disk, Disk)
             if disk.name == 'Root':
                 haz_root = True
-            self.assertIn('G', disk.to_info_string())
+            self.assertIn('G', disk.to_info_string()[1])
         self.assertTrue(haz_root)

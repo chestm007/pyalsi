@@ -5,6 +5,12 @@ from pyalsi.utils.strings import colorize_usage, colorize_percent, Colors
 
 
 class Disk(object):
+    class Usage(object):
+        def __init__(self, usage):
+            self.used = Bytes(usage.used)
+            self.total = Bytes(usage.total)
+            self.percent = int(usage.percent)
+
     def __init__(self, disk):
         name = disk.mountpoint.split('/')[-1]
         self.usage = self.Usage(psutil.disk_usage(disk.mountpoint))
@@ -12,19 +18,12 @@ class Disk(object):
         self.fstype = disk.fstype
 
     def to_info_string(self):
-        return ("{c2}{}: {} ({}) ({})".format(
-            self.name,
+        return ("{}:".format(self.name), " {} ({}) ({})".format(
             colorize_usage(self.usage.used.to_gigabytes(),
                            self.usage.total.to_gigabytes(),
                            self.usage.percent, "G"),
             colorize_percent(self.usage.percent, "%"),
             self.fstype, **Colors.colors))
-
-    class Usage(object):
-        def __init__(self, usage):
-            self.used = Bytes(usage.used)
-            self.total = Bytes(usage.total)
-            self.percent = int(usage.percent)
 
 
 class DiskGroup(object):
