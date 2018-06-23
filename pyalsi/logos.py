@@ -5,7 +5,8 @@ basically just a dict, with the key as the name
 
 logos = {'Arch': {
     'Archey':  # ASCII art by Brett Bohnenkamper <kittykatt@silverirc.com>
-        """{c1}                          .                    XX
+        """                                               XX
+        {c1}                  .                    XX
         {c1}                  #                    XX
         {c1}                 ###                   XX
         {c1}                #####                  XX
@@ -23,8 +24,8 @@ logos = {'Arch': {
         {c2}     ;####                 ####;       XX
         {c2}     ##'                     '##       XX
         {c2}    #'                         `#      """,
-    'Screenfetch':
-        """{c1}                           `                        XX
+    'Screenfetch': """                                                    XX
+        {c1}                   `                        XX
         {c1}                  .o+`                      XX
         {c1}                 `ooo/                      XX
         {c1}                `+oooo:                     XX
@@ -43,9 +44,8 @@ logos = {'Arch': {
         {c2}  `+sso+:-`                 `.-/+oso:       XX
         {c2} `++:.                           `-/+/      XX
         {c2} .`                                 `+/     """,
-    'Below':
-        """
-        {c2}   ,{c1}                            _     _ _
+    'Below': """
+    {c2}   ,{c1}                       _     _ _
    {c2}   /{c1}#{c2}\\{c1}        __ _ _ __ ___| |__ | (_)_ __  _   ___  __
   {c2}   /{c1}###{c2}\\{c1}      / _` | '__/ __| '_ \\| | | '_ \\| | | \\ \\/ /
  {c2}   /{c1}#####{c2}\\{c1}    | (_| | | | (__| | | | | | | | | |_| |)  (
@@ -54,8 +54,7 @@ logos = {'Arch': {
 {c2} /{c1}#.--   --.#{c2}\\        A simple, elegant GNU/Linux distribution.
 {c2}/{c1}`           `{c2}\\"""},
     'Ubuntu': {
-        'Archey':
-            """                                            XX
+        'Archey': """                                            XX
 {red}                          .oyhhs:           XX
 {high}                 ..__.., {red}shhhhhh-           XX
 {high}               -+++++++++'{red}:yyhhyo'          XX
@@ -69,7 +68,7 @@ logos = {'Arch': {
 {high}  ''' '{med}-::::-              {red}:yhhhhh:         XX
 {med}      -:::::-.           {red}-ohhhhhh+          XX
 {med}       .::::-'  {red}-o+///+oyhhyyyhy:           XX
-{med}        '.--   {red}/yhhhhhhhy+{med},....           XX
+{med}        '.--   {red}/yhhhhhhhy+{med},....             XX
 {red}               /hhhhhhhhh{med}-.-:::;            XX
 {red}               '.:://::- {med}-:::::;            XX
 {med}                         '.-:-'                """

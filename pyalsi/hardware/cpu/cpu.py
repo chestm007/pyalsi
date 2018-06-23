@@ -1,11 +1,11 @@
-from cpuinfo import cpuinfo
+import cpuinfo
 
 
 class Cpu(object):
     def __init__(self):
-        self.count = None
-        self.brand = None
-        self.__dict__.update(cpuinfo.get_cpu_info_from_proc_cpuinfo())
+        info = cpuinfo.get_cpu_info()
+        self.count = info.get('count')
+        self.brand = info.get('brand')
 
     def to_info_string(self):
         fmt = "{} cores" if self.count > 1 else "{} core"
