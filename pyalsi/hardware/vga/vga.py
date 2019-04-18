@@ -19,9 +19,6 @@ class Vga(object):
             else:
                 cards[line] = 1
         output = []
-        if len(cards) > 0:
-            for k, v in cards.items():
-                output.append("{}{}".format(k, ("(x{})".format(v)) if v > 1 else ""))
-        else:
-            return False
+        for k, v in cards.items():
+            output.append("{}{}".format(k, ("(x{})".format(v)) if v > 1 else ""))
         return output
