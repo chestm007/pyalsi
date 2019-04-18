@@ -9,6 +9,7 @@ from mock import patch
 @attr('small', 'hardware', 'unit', 'pci')
 class TestVgaUnit(BaseTest):
 
+    @patch('os.popen', MockOsPopen)
     def test_vga_vanilla(self):
         pci_devices = Vga().devices
         self.assertIsInstance(pci_devices, list)

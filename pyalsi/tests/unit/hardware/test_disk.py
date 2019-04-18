@@ -29,4 +29,4 @@ class TestDiskUnit(BaseTest):
             if disk.name == 'Root':
                 haz_root = True
                 ensure_byte_unit_displayed(disk)
-        self.assertTrue(haz_root)
+        self.assertTrue(haz_root, group.disks)
