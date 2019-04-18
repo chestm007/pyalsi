@@ -59,7 +59,7 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
     last_login = system.last_login
     info = [("OS", "{} {}".format(system.friendly_distro, platform.machine())),
             ("Hostname", platform.node()),
-            ("Last Login From", '{} At {}'.format(last_login['ip'], last_login['at'])),
+            ("Last Login From", ('{} At {}'.format(last_login['ip'], last_login['at'])) if last_login else 'Never'),
             ("Uptime", system.uptime),
             ("Kernel", platform.release()),
             ("Shell", system.shell),
