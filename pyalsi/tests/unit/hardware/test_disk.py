@@ -20,13 +20,8 @@ class TestDiskUnit(BaseTest):
             self.assertTrue(found)
 
         Colors.colors['c2'] = ''
-        haz_root = False
         group = DiskGroup()
         self.assertIsInstance(group, DiskGroup)
         self.assertIsInstance(group.disks, list)
         for disk in group.disks:
             self.assertIsInstance(disk, Disk)
-            if disk.name == 'Root':
-                haz_root = True
-                ensure_byte_unit_displayed(disk)
-        self.assertTrue(haz_root, group.disks)

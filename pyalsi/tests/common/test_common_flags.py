@@ -12,7 +12,7 @@ class TestCommonCommandFlags(BaseTest):
     @attr('small')
     def test_unflagged_functionality(self):
         result = self.runner.invoke(cli)
-        self.assertEqual(result.exit_code, 0, result.stderr)
+        self.assertEqual(result.exit_code, 0, result.output)
         self.assertIn('OS', result.output, result.output)
 
     @attr('medium')
@@ -43,7 +43,7 @@ class TestCommonCommandFlags(BaseTest):
         for n in normal:
             for b in bold:
                 result = self.runner.invoke(cli, ['-n', n, '-b', b])
-                self.assertEqual(result.exit_code, 0, result.stderr)
+                self.assertEqual(result.exit_code, 0, result.output)
 
     @attr('medium')
     def test_info_below_flag_functionality(self):
