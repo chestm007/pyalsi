@@ -37,7 +37,7 @@ class System(object):
     def uptime(self):
         with open('/proc/uptime', 'r') as f:
             uptime_seconds = float(f.readline().split()[0])
-            return str(timedelta(seconds=math.ceil(uptime_seconds)))
+            return timedelta(seconds=math.ceil(uptime_seconds))
 
     @property
     def window_manager(self):

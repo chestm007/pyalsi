@@ -33,7 +33,11 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
 
     colors = Colors(primary=normal[normal_colour], secondary=bold[bold_colour])
 
-    cpu, ram, system, vga, disks = Cpu(), Ram(), System(), Vga(), DiskGroup()
+    cpu = Cpu()
+    ram = Ram()
+    system = System()
+    vga = Vga()
+    disks = DiskGroup()
 
     if distro is not None:
         if distro not in logos.keys():
@@ -56,7 +60,7 @@ def cli(normal_colour, bold_colour, info_below, distro, logo):
     info = [("OS", "{} {}".format(system.friendly_distro, platform.machine())),
             ("Hostname", platform.node()),
             ("Last Login From", '{} At {}'.format(last_login['ip'], last_login['at'])),
-            ("Uptime", System.uptime),
+            ("Uptime", system.uptime),
             ("Kernel", platform.release()),
             ("Shell", system.shell),
             ("Packages", system.num_packages),

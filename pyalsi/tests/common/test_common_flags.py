@@ -5,6 +5,7 @@ from pyalsi.colors import normal, bold
 from nose.plugins.attrib import attr
 from pyalsi.system.system import System
 
+
 @attr('common')
 class TestCommonCommandFlags(BaseTest):
 
