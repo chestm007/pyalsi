@@ -14,7 +14,7 @@ python3_test: &python3_test
       . venv/bin/activate
       pip3 install pytest
       pip3 install nose mock click
-      ls
+      pyalsi
       cd pyalsi/tests
       python3 -m pytest
 
