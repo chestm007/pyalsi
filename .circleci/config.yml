@@ -91,4 +91,4 @@ workflows:
             - python3.7
             - python3.8
           filters:
-            tags:
+            tags: all
