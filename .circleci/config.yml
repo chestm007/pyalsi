@@ -23,7 +23,6 @@ deploy: &deploy
     name: deploy to pypi
     command: |
       . venv/bin/activate
-      . venv/bin/activate
       echo -e "[pypi]" >> ~/.pypirc
       echo -e "username = chestm007" >> ~/.pypirc
       echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
