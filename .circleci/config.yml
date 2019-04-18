@@ -91,4 +91,5 @@ workflows:
             - python3.7
             - python3.8
           filters:
-            tags: all
+            tags:
+              only: /^v\d+.\d+.\d+$/
