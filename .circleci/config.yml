@@ -4,7 +4,7 @@ python3_install: &python3_install
     command: |
       pip3 install virtualenv
       python3 -m venv venv
-      . /venv/bin/activate
+      . venv/bin/activate
       pip3 install .
 
 python3_test: &python3_test
