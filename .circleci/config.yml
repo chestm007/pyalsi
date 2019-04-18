@@ -13,6 +13,7 @@ python3_test: &python3_test
     command: |
       . venv/bin/activate
       pip3 install pytest
+      pip3 install nose mock click
       ls
       cd pyalsi/tests
       python3 -m pytest
@@ -49,7 +50,8 @@ jobs:
             . venv/bin/activate
             pip2 install pytest
             pip2 install .
-            cd tests
+            pip2 install mock nose click
+            cd pyalsi/tests
             python2 -m pytest
   python3.5:
     docker:
