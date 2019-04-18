@@ -17,6 +17,7 @@ setup(
     """,
     requires=[
         'nose',
-        'mock'
+        'mock',
+        'click'
     ]
 )
