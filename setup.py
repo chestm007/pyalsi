@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pyalsi',
-    version='0.5.2',
+    version='0.5.3',
     packages=find_packages(),
     install_requires=['psutil', 'click', 'py-cpuinfo'],
     license='GPL2',
