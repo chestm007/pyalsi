@@ -13,7 +13,8 @@ python3_test: &python3_test
     command: |
       . venv/bin/activate
       pip3 install pytest
-      cd tests
+      ls
+      cd pyalsi/tests
       python3 -m pytest
 
 deploy: &deploy
