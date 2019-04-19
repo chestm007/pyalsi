@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/chestm007/pyalsi.svg?style=svg)](https://circleci.com/gh/chestm007/pyalsi)  
 Inspired by alsi(https://github.com/trizen/alsi) which was written by (Trizen <echo dHJpemVueEBnbWFpbC5jb20K | base64 -d>)
 
 ASCII artists in no particular order:
